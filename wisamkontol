@@ -1,0 +1,87 @@
+#! /usr/bin/env python
+import requests
+import argparse
+import hashlib
+import json
+import time
+import sys
+import os
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--subreddits', type=str, default='dickpic,penis,softies,balls,ratemycock,cock')
+parser.add_argument('--url', type=str, default='https://www.reddit.com/r/{}/.json')
+args = parser.parse_args()
+
+subreddits = str(args.subreddits).split(',')
+
+obj = dict()
+for subreddit in subreddits:
+    directory = './{}-images'.format(subreddit)
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+    with open(directory + '/image_urls.txt', 'w') as image_urls_file:
+        last_counts = []
+        total_image_count = 0
+        total_subreddit_api_calls = 0
+        params = {"count": 0, "limit": 100}
+        headers = {'user-agent': hashlib.md5('{}-dick-scraper'.format(subreddit)).hexdigest()}
+
+        while ('after' not in params) or params['after']:
+            try:
+                url = args.url.format(subreddit)
+                r = requests.get(url, params=params, headers=headers)
+                print('requesting: ')
+                print('< HTTP/1.1 {}'.format(url))
+                for k,v in headers.items():
+                    print('< {}={}'.format(k,v))
+                print('< ')
+                print('< {}'.format(json.dumps(params)))
+                print('')
+                print('')
+                print('response:')
+                print('> HTTP/1.1 {}'.format(r.status_code))
+                print('')
+
+                assert r.status_code == 200, r.text
+                obj = r.json()
+                assert obj and obj.get('data', {}).get('children'), r.text
+                posts = obj.get('data').get('children')
+                access_images = lambda x: (x.get('data', {}).get('preview', {}).get('images', {}))
+                filtered_data = filter(lambda x: len(x) > 0, map(access_images, posts))
+                image_urls = [x[0].get('source', {}).get('url') for x in filtered_data]
+                last_counts.append(len(image_urls))
+                last_counts = last_counts[-10:]
+                
+                print("pulling down images:")
+                for i, url in enumerate(image_urls):
+                    image_urls_file.write(url + "\n")
+                    sys.stdout.write('.')
+                    if i and i % 40 == 0:
+                        sys.stdout.write('(40 / {})\n'.format(len(image_urls)))
+                    sys.stdout.flush()
+
+                    img = requests.get(url).content
+                    local_file = directory + '/' + hashlib.md5(url).hexdigest()
+                    with open(local_file, 'w') as f:
+                        f.write(img)
+
+                print('')
+                print("found {} images".format(len(image_urls)))
+                print('last counts: {}'.format(last_counts))
+                print('')
+                print('head of images:')
+                for url in image_urls[:5]:
+                    print(url)
+                print('')
+                total_image_count += len(image_urls)
+                total_subreddit_api_calls += 1
+
+                params['count'] += 100
+                params['after'] = obj['data']['after']
+            except AssertionError as e:
+                print("failed with assertion error:\n{}".format(e))
+            time.sleep(0.25)
+        print("finished processing records for {}".format(subreddit))
+        print("calls made: {}".format(total_subreddit_api_calls))
+        print("images found: {}".format(total_image_count))
+        print('')
