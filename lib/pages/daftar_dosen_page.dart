@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test/widgets/pimpinan_bottom_nav_bar.dart';
 
 class DaftarDosenPage extends StatelessWidget {
   const DaftarDosenPage({super.key});
@@ -12,6 +13,7 @@ class DaftarDosenPage extends StatelessWidget {
       body: const Center(
         child: Text('Ini adalah halaman Daftar Dosen'),
       ),
+      bottomNavigationBar: const PimpinanBottomNavBar(),
     );
   }
 }

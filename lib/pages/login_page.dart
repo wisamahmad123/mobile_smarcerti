@@ -1,55 +1,26 @@
 import 'package:flutter/material.dart';
-import '../widgets/login_form.dart'; // Perbaiki import untuk mengarah ke folder yang benar
-import 'home_page.dart'; // Import halaman HomePage
+import '../widgets/login_form.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>(); // Form key untuk validasi
-
-  // Fungsi login
-  void _login(String nip, String password) {
-    // Validasi form
-    if (_formKey.currentState!.validate()) {
-      // Jika validasi form berhasil
-      if (nip == '2241' && password == '1234') {
-        // Jika NIP dan password cocok
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      } else {
-        // Jika NIP atau password salah, tampilkan pesan kesalahan
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid NIP or password')),
-        );
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 300, // Tinggi AppBar
-        flexibleSpace: const Center(
+    return const Scaffold(
+      body: Center( // Menggunakan Center agar konten berada di tengah
+        child: SingleChildScrollView( // Membuat scroll agar tidak overflow pada layar kecil
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipOval(
                 child: Image(
                   image: AssetImage('assets/images/static.png'),
-                  width: 100,
-                  height: 100,
+                  width: 75,
+                  height: 75,
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 10), // Jarak antara gambar dan teks
+              SizedBox(height: 20),
               Text(
                 'Welcome!',
                 style: TextStyle(
@@ -58,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5), // Jarak antara teks
               Text(
                 'Please log in to your account',
                 style: TextStyle(
@@ -67,13 +37,11 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color(0xFF6C6C6C),
                 ),
               ),
+              SizedBox(height: 20),
+              LoginForm(),
             ],
           ),
         ),
-      ),
-      body: LoginForm(
-        formKey: _formKey, // Mengirimkan GlobalKey ke LoginForm
-        onLogin: _login, // Mengirimkan fungsi login sebagai parameter
       ),
     );
   }

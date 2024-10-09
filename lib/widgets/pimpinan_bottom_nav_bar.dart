@@ -14,43 +14,46 @@ class PimpinanBottomNavBar extends StatefulWidget {
 class _PimpinanBottomNavBarState extends State<PimpinanBottomNavBar> {
   int _selectedIndex = 0; // Index halaman yang dipilih
 
-  // Daftar halaman yang akan dinavigasi
-  final List<Widget> _pages = [
-    const HomePage(),
-    const HistoryPage(),
-    const ProfilePage(),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index; // Perbarui index yang dipilih
+      // Ganti halaman menggunakan Navigator
+      if (index == 0) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      } else if (index == 1) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HistoryPage()));
+      } else if (index == 2) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const ProfilePage()));
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex], // Tampilkan halaman yang sesuai
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 35),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history, size: 35),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 35),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex, // Indeks yang aktif
-        onTap: _onItemTapped, // Panggil fungsi saat item diklik
-        selectedItemColor:
-            const Color.fromARGB(255, 239, 84, 40), // Warna item yang dipilih
-      ),
+    return BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home, size: 35),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.history, size: 35),
+          label: 'History',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person, size: 35),
+          label: 'Profile',
+        ),
+      ],
+      currentIndex: _selectedIndex, // Indeks yang aktif
+      unselectedItemColor: 
+          const Color.fromARGB(255, 156, 156, 156),
+      onTap: _onItemTapped, // Panggil fungsi saat item diklik
+      selectedItemColor:
+          const Color.fromARGB(255, 239, 84, 40), // Warna item yang dipilih
     );
   }
 }

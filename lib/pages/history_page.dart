@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test/widgets/pimpinan_bottom_nav_bar.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
@@ -12,6 +13,7 @@ class HistoryPage extends StatelessWidget {
       body: const Center(
         child: Text('Ini adalah halaman History'),
       ),
+      bottomNavigationBar: const PimpinanBottomNavBar(),
     );
   }
 }

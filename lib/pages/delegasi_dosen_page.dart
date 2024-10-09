@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test/widgets/pimpinan_bottom_nav_bar.dart';
 
 class DelegasiDosenPage extends StatelessWidget {
   const DelegasiDosenPage({super.key});
@@ -12,6 +13,7 @@ class DelegasiDosenPage extends StatelessWidget {
       body: const Center(
         child: Text('Ini adalah halaman Delegasi Dosen'),
       ),
+      bottomNavigationBar: const PimpinanBottomNavBar(),
     );
   }
 }

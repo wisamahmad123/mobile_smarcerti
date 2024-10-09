@@ -1,61 +1,72 @@
-
-
 import 'package:flutter/material.dart';
+import '../pages/home_page.dart';
 
-class LoginForm extends StatelessWidget {
-  final GlobalKey<FormState> formKey; // Key untuk form
-  final Function(String, String) onLogin; // Callback untuk login
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
-  const LoginForm({Key? key, required this.formKey, required this.onLogin})
-      : super(key: key);
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nipController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  String? _validateNip(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'NIP tidak boleh kosong';
+    }
+    if (value != '2241') {
+      return 'NIP tidak sesuai';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password tidak boleh kosong';
+    }
+    if (value != '1234') {
+      return 'Password salah';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nipController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-
-    return Form(
-      key: formKey, // Assign key to form
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
         child: Column(
           children: [
-            // Input NIP
+            // Field untuk NIP
             TextFormField(
-              controller: nipController, // Controller untuk NIP
+              controller: _nipController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'NIP',
                 hintText: 'Masukkan NIP',
                 border: OutlineInputBorder(),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Masukkan NIP yang sesuai';
-                }
-                return null; // Valid
-              },
+              validator: _validateNip,
             ),
             const SizedBox(height: 20),
 
-            // Input Password
+            // Field untuk Password
             TextFormField(
-              controller: passwordController, // Controller untuk Password
+              controller: _passwordController,
               obscureText: true,
               decoration: const InputDecoration(
                 labelText: 'Password',
                 hintText: 'Masukkan Password',
                 border: OutlineInputBorder(),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Masukkan password yang sesuai';
-                }
-                return null; // Valid
-              },
+              validator: _validatePassword,
             ),
 
-            const SizedBox(height: 20), // Tambahkan jarak di bawah TextField
+            const SizedBox(height: 20),
 
             // Tombol Login
             SizedBox(
@@ -63,10 +74,13 @@ class LoginForm extends StatelessWidget {
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  // if (formKey.currentState!.validate()) {
-                  //   onLogin(nipController.text, passwordController.text);
-                  // }
-                  onLogin(nipController.text, passwordController.text);
+                  if (_formKey.currentState!.validate()) {
+                    // Jika validasi sukses, navigasi ke halaman Home
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -87,5 +101,13 @@ class LoginForm extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Pastikan untuk menghapus controller ketika tidak digunakan lagi
+    _nipController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

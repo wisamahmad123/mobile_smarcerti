@@ -1,5 +1,6 @@
 // widgets/custom_app_bar.dart
 import 'package:flutter/material.dart';
+import 'package:test/widgets/notifikasi_pop_up.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -21,8 +22,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.notifications),
           iconSize: 35,
           onPressed: () {
-            // fitur muncul notif
-          },
+            // Tampilkan NotificationDialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const NotifikasiPopUp(
+                    title: 'Notifikasi',
+                    message: 'popup notif',
+                  );
+                },
+              );
+            },
           color: Colors.white,
         ),
       ],

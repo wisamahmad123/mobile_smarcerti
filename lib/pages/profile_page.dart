@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test/pages/login_page.dart';
+import 'package:test/widgets/pimpinan_bottom_nav_bar.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -9,9 +11,24 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Halaman Profil'),
       ),
-      body: const Center(
-        child: Text('Ini adalah halaman Profil'),
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(21, 174, 174, 174),
+        ),
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // Navigasi ke LoginPage saat tombol ditekan
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+            child: const Text('Logout'),
+          ),
+        ),
       ),
+      bottomNavigationBar: const PimpinanBottomNavBar(),
     );
   }
 }
